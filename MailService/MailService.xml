@@ -1,0 +1,350 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MailService</name>
+    </assembly>
+    <members>
+        <member name="T:MailService.Controllers.AuthenticationController">
+            <summary>
+            Контроллер для аутентификации пользователя
+            </summary>
+        </member>
+        <member name="T:MailService.Controllers.AuthenticationController.AuthenticationRequestBody">
+            <summary>
+            Класс с данными пользователя
+            </summary>
+        </member>
+        <member name="P:MailService.Controllers.AuthenticationController.AuthenticationRequestBody.UserName">
+            <summary>
+            Имя пользователя
+            </summary>
+        </member>
+        <member name="P:MailService.Controllers.AuthenticationController.AuthenticationRequestBody.Password">
+            <summary>
+            Пароль пользователя
+            </summary>
+        </member>
+        <member name="M:MailService.Controllers.AuthenticationController.Authenticate(MailService.Controllers.AuthenticationController.AuthenticationRequestBody)">
+            <summary>
+            Метод для аутентификации пользователя
+            </summary>
+            <param name="authenticationRequestBody">Данные пользователя</param>
+            <returns>Возвращает имя пользователя и пароль</returns>
+        </member>
+        <member name="T:MailService.Controllers.MailsController">
+            <summary>
+            Контроллер для формирования, рассылки и получения истории сообщений
+            </summary>
+        </member>
+        <member name="M:MailService.Controllers.MailsController.#ctor(MailService.Services.IMailServiceRepository,MailService.Services.IMailSenderService,AutoMapper.IMapper)">
+            <summary>
+            Конструктор репозитория сообщений, автомаппера и сервиса рассылки сообщений
+            </summary>
+            <param name="mailServiceRepository">Репозиторий сообщений</param>
+            <param name="mailSender">Сервис формирования и рассылки сообщений</param>
+            <param name="mapper">Автомаппер</param>
+            <exception cref="T:System.ArgumentNullException">Проверяет входные параметры на null</exception>
+        </member>
+        <member name="M:MailService.Controllers.MailsController.GetMails">
+            <summary>
+            Получает информацию/историю о сформированных сообщениях
+            </summary>
+            <returns>Список всех сформированных сообщений из базы</returns>
+        </member>
+        <member name="M:MailService.Controllers.MailsController.GenerateMailDistribution(MailService.Models.MailSenderDto)">
+            <summary>
+            Формирует и рассылает сообщения
+            </summary>
+            <param name="mail">Модель данных для отправки сообщения</param>
+        </member>
+        <member name="T:MailService.DbContexts.MailServiceContext">
+            <summary>
+            Класс DbContext, представляющий базу данных сформированных сообщений
+            </summary>
+        </member>
+        <member name="P:MailService.DbContexts.MailServiceContext.Mails">
+            <summary>
+            Свойство, представляющее таблицу сообщений в БД
+            </summary>
+        </member>
+        <member name="M:MailService.DbContexts.MailServiceContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Метод, который настраивает модель для БД
+            </summary>
+            <param name="modelBuilder">Позволяет сформировать и построить модель БД</param>
+        </member>
+        <member name="T:MailService.Entities.Mail">
+            <summary>
+            Сущность сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Mail.Id">
+            <summary>
+            ID сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Mail.Subject">
+            <summary>
+            Тема сообщения. Максимальная длина 50 символов
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Mail.Body">
+            <summary>
+            Текст сообщения. Максимальная длина 200 символов
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Mail.Recipients">
+            <summary>
+            Список адресатов сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Mail.CreatedAt">
+            <summary>
+            Дата и время создания сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Mail.Result">
+            <summary>
+            Результат отправки сообщения - OK, Failed
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Mail.FailedMessage">
+            <summary>
+            Текст ошибки, если сообщение не отправилось. Пустая строка, если отправка успешна
+            </summary>
+        </member>
+        <member name="T:MailService.Entities.MailResultEnum">
+            <summary>
+            Перечисление возможных результатов отправки сообщения
+            </summary>
+        </member>
+        <member name="F:MailService.Entities.MailResultEnum.OK">
+            <summary>
+            Учпешно отправлено
+            </summary>
+        </member>
+        <member name="F:MailService.Entities.MailResultEnum.Failed">
+            <summary>
+            Не удалось отправить
+            </summary>
+        </member>
+        <member name="T:MailService.Entities.Recipient">
+            <summary>
+            Сущность адресата сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Recipient.Id">
+            <summary>
+            ID адресата
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Recipient.Name">
+            <summary>
+            ФИО адресата. Максимальная длина 50 символов
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Recipient.EmailAddress">
+            <summary>
+            Адрес эл.почты адресата. Задана проверка соответствия формату email адреса
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Recipient.Mail">
+            <summary>
+            Сообщение, предназначенное для адресата. Игнорируется при сериализации в JSON
+            </summary>
+        </member>
+        <member name="P:MailService.Entities.Recipient.MailId">
+            <summary>
+            ID сообщения, предназначенного для адресата
+            </summary>
+        </member>
+        <member name="M:MailService.Entities.Recipient.#ctor(System.String)">
+            <summary>
+            Конструктор, принимает адрес эл.почты адресата и записывает его в свойство EmailAddress
+            </summary>
+            <param name="emailAddress">Адрес эл.почты адресата</param>
+        </member>
+        <member name="T:MailService.Models.MailConfiguration">
+            <summary>
+            Класс конфигурации сервиса для библиотеки MailKit. (Отправитель)
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailConfiguration.From">
+            <summary>
+            Адрес эл.почты отправителя
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailConfiguration.SmtpServer">
+            <summary>
+            Адрес SMTP-сервера для отправки сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailConfiguration.Port">
+            <summary>
+            Порт SMTP-сервера для отправки почты
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailConfiguration.UserName">
+            <summary>
+            Имя пользователя для аутентификации на SMTP-сервере
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailConfiguration.Password">
+            <summary>
+            Пароль для аутентификации на SMTP-сервере
+            </summary>
+        </member>
+        <member name="T:MailService.Models.MailDto">
+            <summary>
+            Модель отображения данных сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailDto.Subject">
+            <summary>
+            Тема сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailDto.Body">
+            <summary>
+            Текст сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailDto.Recipients">
+            <summary>
+            Список адресатов сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailDto.CreatedAt">
+            <summary>
+            Дата и время создания сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailDto.Result">
+            <summary>
+            Результат отправки сообщения - OK, Failed
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailDto.FailedMessage">
+            <summary>
+            Текст ошибки, если сообщение не отправилось. Пустая строка, если отправка успешна
+            </summary>
+        </member>
+        <member name="T:MailService.Models.MailSenderDto">
+            <summary>
+            Модель данных для отправки сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailSenderDto.Subject">
+            <summary>
+            Тема сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailSenderDto.Body">
+            <summary>
+            Текст сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.MailSenderDto.Reciepents">
+            <summary>
+            Список адресатов
+            </summary>
+        </member>
+        <member name="T:MailService.Models.RecipientDto">
+            <summary>
+            Модель данных для адресата сообщения
+            </summary>
+        </member>
+        <member name="P:MailService.Models.RecipientDto.Name">
+            <summary>
+            ФИО адресата. Пустая строка, если не указано
+            </summary>
+        </member>
+        <member name="P:MailService.Models.RecipientDto.EmailAddress">
+            <summary>
+            Адрес эл.почты адресата
+            </summary>
+        </member>
+        <member name="T:MailService.Profiles.MailProfile">
+            <summary>
+            Профиль для маппинга между классами Mail и MailDto
+            </summary>
+        </member>
+        <member name="M:MailService.Profiles.MailProfile.#ctor">
+            <summary>
+            Создаем правила маппинга в конструкторе
+            </summary>
+        </member>
+        <member name="T:MailService.Profiles.RecipientProfile">
+            <summary>
+            Профиль для маппинга между классами Recipient и RecipientDto
+            </summary>
+        </member>
+        <member name="M:MailService.Profiles.RecipientProfile.#ctor">
+            <summary>
+            Создаем правила маппинга в конструкторе
+            </summary>
+        </member>
+        <member name="T:MailService.Services.IMailSenderService">
+            <summary>
+            Интерфейс, определяющий методы для отправки сообщений
+            </summary>
+        </member>
+        <member name="M:MailService.Services.IMailSenderService.SendMailAsync(MailService.Models.MailSenderDto)">
+            <summary>
+            Асинхронно отправляет сообщение с заданными параметрами
+            </summary>
+            <param name="mail">Модель данных для отправки сообщения</param>
+        </member>
+        <member name="T:MailService.Services.IMailServiceRepository">
+            <summary>
+            Интерфейс, определяющий методы для работы с репозиторием сообщений
+            </summary>
+        </member>
+        <member name="M:MailService.Services.IMailServiceRepository.GetMailsAsync">
+            <summary>
+            Асинхронно получает все сообщения из репозитория
+            </summary>
+            <returns>Список сообщений</returns>
+        </member>
+        <member name="T:MailService.Services.MailSenderService">
+            <summary>
+            Реализация метода интерфейса IMailSenderService для отсылки сообщений
+            </summary>
+        </member>
+        <member name="M:MailService.Services.MailSenderService.#ctor(MailService.Models.MailConfiguration,MailService.DbContexts.MailServiceContext)">
+            <summary>
+             Конструктор, принимает конфигурацию сервиса и контекст БД сервиса
+            </summary>
+            <param name="mailConfiguration">Конфигурацию сервиса (Отправитель)</param>
+            <param name="context">Контекст БД</param>
+            <exception cref="T:System.ArgumentNullException">Проверка входных параметров на null</exception>
+        </member>
+        <member name="M:MailService.Services.MailSenderService.SendMailAsync(MailService.Models.MailSenderDto)">
+            <summary>
+            Метод, который отправляет сообщение с заданными параметрами
+            и сохраняет результат в БД
+            </summary>
+            <param name="mail">Модель данных для отсылки сообщения</param>
+            <returns></returns>
+        </member>
+        <member name="T:MailService.Services.MailServiceRepository">
+            <summary>
+             Реализирует методы интерфейса IMailServiceRepository для работы с репозиторием сообщений
+            </summary>
+        </member>
+        <member name="M:MailService.Services.MailServiceRepository.#ctor(MailService.DbContexts.MailServiceContext)">
+            <summary>
+            Конструктор, принимающий контекст БД сервиса
+            </summary>
+            <param name="context">Контекст БД</param>
+            <exception cref="T:System.ArgumentNullException">Проверка входного параметра на null</exception>
+        </member>
+        <member name="M:MailService.Services.MailServiceRepository.GetMailsAsync">
+            <summary>
+            Метод, получает все сообщения и адресаты из репозитория
+            и сортирует их по убыванию даты создания
+            </summary>
+            <returns>Список сообщений со всеми данными</returns>
+        </member>
+    </members>
+</doc>
