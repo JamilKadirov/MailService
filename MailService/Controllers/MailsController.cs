@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MailService.Models;
 using MailService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MailService.Controllers
@@ -9,6 +10,7 @@ namespace MailService.Controllers
     /// Контроллер для формирования, рассылки и получения истории сообщений
     /// </summary>
     [Route("api/mails")]
+    [Authorize]
     [ApiController]
     public class MailsController : ControllerBase
     {

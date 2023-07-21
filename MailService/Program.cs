@@ -2,7 +2,9 @@ using MailService.DbContexts;
 using MailService.Models;
 using MailService.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace MailService
@@ -46,6 +48,22 @@ namespace MailService
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new()
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+                            ValidAudience = builder.Configuration["Authentication:Audience"],
+                            IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
+                        };
+                    }
+                );
+
             builder.Services.AddApiVersioning(setupAction =>
             {
                 setupAction.AssumeDefaultVersionWhenUnspecified = true;
@@ -65,6 +83,8 @@ namespace MailService
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
