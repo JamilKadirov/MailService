@@ -51,7 +51,7 @@ namespace MailService.Controllers
         /// </summary>
         /// <param name="mail">Модель данных для отправки сообщения</param>
         [HttpPost("generatemaildistribution")]
-        public async Task GenerateMailDistribution(MailSenderDto mail)
+        public async Task GenerateMailDistribution([FromBody] MailSenderDto mail)
         {
             await _mailSender.SendMailAsync(mail);
         }
